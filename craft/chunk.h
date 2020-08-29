@@ -17,11 +17,15 @@ namespace craft {
 
         static uint gen_func(int x, int y, int z);
 
+        void set_neighbors(Chunk *x, Chunk *z, Chunk *X, Chunk *Z);
+
         int get_x() const;
 
         int get_z() const;
 
-        void load();
+        void load_blocks();
+
+        void load_lighting();
 
         void unload();
 
@@ -47,29 +51,46 @@ namespace craft {
         uint height;
         int x;
         int z;
+        craft::Chunk *neighbor_x, *neighbor_z, *neighbor_X, *neighbor_Z;
 
         AdjacentBlockInfo calculate_adjacent_block_info(LocalPos p);
 
         void update_blocks(std::vector<LocalPos> *blocks);
 
-        static void add_point(std::vector<float> *data, glm::vec3 v, glm::vec2 t, float b);
+        static void add_point(
+            std::vector<float> *data,
+            glm::vec3 v,
+            glm::vec2 t,
+            float b
+        );
 
-        static void
-        add_triangle(std::vector<float> *data, glm::vec3 A, glm::vec3 B, glm::vec3 C, glm::vec2 a, glm::vec2 b,
-                     glm::vec2 c,
-                     TriLightingInfo li);
+        static void add_triangle(
+            std::vector<float> *data,
+            glm::vec3 A,
+            glm::vec3 B,
+            glm::vec3 C,
+            glm::vec2 a,
+            glm::vec2 b,
+            glm::vec2 c,
+            TriLightingInfo li
+        );
 
-        static FaceGraphics *
-        add_quad(std::vector<float> *data, glm::vec3 A, glm::vec3 B, glm::vec3 C, glm::vec3 D, glm::vec2 a, glm::vec2 b,
-                 glm::vec2 c, glm::vec2 d, QuadLightingInfo li);
+        static FaceGraphics *add_quad(
+            std::vector<float> *data,
+            glm::vec3 A, glm::vec3 B, glm::vec3 C, glm::vec3 D,
+            glm::vec2 a, glm::vec2 b, glm::vec2 c, glm::vec2 d,
+            QuadLightingInfo li
+        );
 
-        BlockGraphics *
-        add_cube(std::vector<float> *data, glm::vec3 pos, float r, BlockInfo bi, AdjacentBlockInfo ai,
-                 BlockLightingInfo li);
+        BlockGraphics *add_cube(
+            std::vector<float> *data, glm::vec3 pos, float r,
+            BlockInfo bi, AdjacentBlockInfo ai, BlockLightingInfo li
+        );
 
-        void
-        add_blockdata(std::vector<float> *data, Block *block, int x, int y, int z, AdjacentBlockInfo ai,
-                      BlockLightingInfo li);
+        void add_blockdata(
+            std::vector<float> *data, Block *block, int x, int y, int z,
+            AdjacentBlockInfo ai, BlockLightingInfo li
+        );
 
         LightPoint *getLightPoint(LocalPos p);
 

@@ -3,8 +3,8 @@
   <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
     <generated>
       <config projectName="test_project" targetName="test_project" />
-      <config projectName="test_project" targetName="glfw" />
       <config projectName="test_project" targetName="uninstall" />
+      <config projectName="test_project" targetName="glfw" />
     </generated>
   </component>
   <component name="CMakeSettings" AUTO_RELOAD="true">
@@ -13,7 +13,18 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4a6dc202-5e08-416e-9744-e505837606a8" name="Default Changelist" comment="" />
+    <list default="true" id="4a6dc202-5e08-416e-9744-e505837606a8" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/lib/glfw/src/libglfw3.a" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/lib/glfw/src/libglfw3.a" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/test_project.exe" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/craft/chunk.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/craft/chunk.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/craft/chunk.h" beforeDir="false" afterPath="$PROJECT_DIR$/craft/chunk.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/craft/craft.h" beforeDir="false" afterPath="$PROJECT_DIR$/craft/craft.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/craft/player.h" beforeDir="false" afterPath="$PROJECT_DIR$/craft/player.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/craft/world.h" beforeDir="false" afterPath="$PROJECT_DIR$/craft/world.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main.cpp" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -102,7 +113,10 @@
       <workItem from="1579570493494" duration="19459000" />
       <workItem from="1580068775004" duration="2891000" />
       <workItem from="1582169040083" duration="268000" />
-      <workItem from="1596999621499" duration="1083000" />
+      <workItem from="1596999621499" duration="1484000" />
+      <workItem from="1597608771845" duration="21695000" />
+      <workItem from="1598543803426" duration="2619000" />
+      <workItem from="1598739818061" duration="46000" />
     </task>
     <servers />
   </component>
@@ -110,25 +124,30 @@
     <option name="version" value="1" />
   </component>
   <component name="WindowStateProjectService">
-    <state width="1877" height="266" key="GridCell.Tab.0.bottom" timestamp="1597018456551">
-      <screen x="1920" y="0" width="1920" height="1040" />
+    <state width="1877" height="266" key="GridCell.Tab.0.bottom" timestamp="1598551627178">
+      <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="266" key="GridCell.Tab.0.bottom/0.0.1920.1040/1920.0.1920.1040@1920.0.1920.1040" timestamp="1597018456551" />
-    <state width="1877" height="266" key="GridCell.Tab.0.center" timestamp="1597018456551">
-      <screen x="1920" y="0" width="1920" height="1040" />
+    <state width="1877" height="266" key="GridCell.Tab.0.bottom/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1598551627178" />
+    <state width="1877" height="266" key="GridCell.Tab.0.bottom/0.0.1920.1040/1920.0.1920.1040@1920.0.1920.1040" timestamp="1597018858584" />
+    <state width="1877" height="266" key="GridCell.Tab.0.center" timestamp="1598551627178">
+      <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="266" key="GridCell.Tab.0.center/0.0.1920.1040/1920.0.1920.1040@1920.0.1920.1040" timestamp="1597018456551" />
-    <state width="1877" height="266" key="GridCell.Tab.0.left" timestamp="1597018456551">
-      <screen x="1920" y="0" width="1920" height="1040" />
+    <state width="1877" height="266" key="GridCell.Tab.0.center/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1598551627178" />
+    <state width="1877" height="266" key="GridCell.Tab.0.center/0.0.1920.1040/1920.0.1920.1040@1920.0.1920.1040" timestamp="1597018858584" />
+    <state width="1877" height="266" key="GridCell.Tab.0.left" timestamp="1598551627178">
+      <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="266" key="GridCell.Tab.0.left/0.0.1920.1040/1920.0.1920.1040@1920.0.1920.1040" timestamp="1597018456551" />
-    <state width="1877" height="266" key="GridCell.Tab.0.right" timestamp="1597018456551">
-      <screen x="1920" y="0" width="1920" height="1040" />
+    <state width="1877" height="266" key="GridCell.Tab.0.left/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1598551627178" />
+    <state width="1877" height="266" key="GridCell.Tab.0.left/0.0.1920.1040/1920.0.1920.1040@1920.0.1920.1040" timestamp="1597018858584" />
+    <state width="1877" height="266" key="GridCell.Tab.0.right" timestamp="1598551627178">
+      <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="266" key="GridCell.Tab.0.right/0.0.1920.1040/1920.0.1920.1040@1920.0.1920.1040" timestamp="1597018456551" />
-    <state x="2576" y="345" key="com.intellij.ide.util.TipDialog" timestamp="1596999624240">
-      <screen x="1920" y="0" width="1920" height="1040" />
+    <state width="1877" height="266" key="GridCell.Tab.0.right/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1598551627178" />
+    <state width="1877" height="266" key="GridCell.Tab.0.right/0.0.1920.1040/1920.0.1920.1040@1920.0.1920.1040" timestamp="1597018858584" />
+    <state x="656" y="345" key="com.intellij.ide.util.TipDialog" timestamp="1598739820437">
+      <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="2576" y="345" key="com.intellij.ide.util.TipDialog/0.0.1920.1040/1920.0.1920.1040@1920.0.1920.1040" timestamp="1596999624240" />
+    <state x="656" y="345" key="com.intellij.ide.util.TipDialog/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1598739820437" />
+    <state x="2576" y="345" key="com.intellij.ide.util.TipDialog/0.0.1920.1040/1920.0.1920.1040@1920.0.1920.1040" timestamp="1597608777569" />
   </component>
 </project>

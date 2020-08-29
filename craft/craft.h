@@ -8,6 +8,8 @@
 #include <gfx/gfx.hpp>
 #include <gfx/vao.hpp>
 #include <vector>
+#include <unordered_map>
+#include <thread>
 #include <glm/glm.hpp>
 #include <gfx/shader.hpp>
 #include <cmath>

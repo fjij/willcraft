@@ -56,57 +56,10 @@ void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
     glViewport(0, 0, width, height);
 }
 
-float last_frame = 0.0f;
-
-void handle_input(GLFWwindow *window, gfx::Camera *cam) {
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-        glfwSetWindowShouldClose(window, true);
-    float delta_time = glfwGetTime() - last_frame;
-    last_frame = glfwGetTime();
-    float spd = 5.0f * delta_time;
-    glm::vec3 cpos = cam->get_transform()->get_position();
-    glm::vec3 cfwd = cam->get_direction();
-    glm::vec3 cup = cam->get_up();
-    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-        cpos += cfwd * spd;
-    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-        cpos -= cfwd * spd;
-    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-        cpos -= glm::normalize(glm::cross(cfwd, cup)) * spd;
-    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-        cpos += glm::normalize(glm::cross(cfwd, cup)) * spd;
-    cam->get_transform()->set_position(cpos);
-
-}
-
-// Camera -----------------------------------------
-float yaw = 180, pitch = 0;
-bool firstMouse = true;
-float lastX = SCREEN_WIDTH / 2, lastY = SCREEN_HEIGHT / 2;
+craft::Player *player;
 
 void mouse_callback(GLFWwindow *window, double xpos, double ypos) {
-    if (firstMouse) {
-        lastX = xpos;
-        lastY = ypos;
-        firstMouse = false;
-    }
-
-    float xoffset = xpos - lastX;
-    float yoffset = lastY - ypos;
-    lastX = xpos;
-    lastY = ypos;
-
-    float sensitivity = 0.1;
-    xoffset *= sensitivity;
-    yoffset *= sensitivity;
-
-    yaw += xoffset;
-    pitch += yoffset;
-
-    if (pitch > 89.0f)
-        pitch = 89.0f;
-    if (pitch < -89.0f)
-        pitch = -89.0f;
+    player->mouseCallback(window, xpos, ypos);
 }
 
 int main() {
@@ -137,10 +90,12 @@ int main() {
     texture_sheet.apply_parameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
     // Camera --------------------------------
-    gfx::Camera cam = gfx::Camera(100.0f, gfx::get_aspect_ratio(), 0.05f, 150.0f);
-    cam.get_transform()->set_position(glm::vec3(0.0f, 30.0f, 0.0f));
-    cam.set_up(glm::vec3(0.0f, 1.0f, 0.0f));
-    cam.set_direction(glm::vec3(0.0f, 0.0f, -1.0f));
+    //gfx::Camera cam = gfx::Camera(100.0f, gfx::get_aspect_ratio(), 0.05f, 150.0f);
+    //cam.get_transform()->set_position(glm::vec3(0.0f, 30.0f, 0.0f));
+    //cam.set_up(glm::vec3(0.0f, 1.0f, 0.0f));
+    //cam.set_direction(glm::vec3(0.0f, 0.0f, -1.0f));
+
+    player = new craft::Player();
 
     // Prep ------------------------------------------
 
@@ -160,7 +115,7 @@ int main() {
 
         // Input -------------------------------------------------
 
-        handle_input(window, &cam);
+        player->handleInput(window);
 
         // Render -----------------------------------------------
         glClearColor(143.0f / 255.0f, 186.0f / 255.0f, 1.0f, 1.0f);
@@ -169,19 +124,21 @@ int main() {
         texture_sheet.bind_to_texture_unit(0);
 
         shader_brightness.use();
-        cam.use_shader(&shader_brightness);
+        player->getCamera()->use_shader(&shader_brightness);
+
+        int px = ((int) player->getCamera()->get_transform()->get_position().x/16);
+        int pz = ((int) player->getCamera()->get_transform()->get_position().z/16);
 
         world.draw(&shader_brightness);
+        world.load_at(px, pz, 3);
 
         // rest
         glfwSwapBuffers(window);
         glfwPollEvents();
 
-        glm::vec3 front;
-        front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-        front.y = sin(glm::radians(pitch));
-        front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-        cam.set_direction(glm::normalize(front));
+        if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+            break;
+        }
     }
 
     glfwTerminate();

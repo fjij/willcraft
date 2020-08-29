@@ -22,6 +22,13 @@ namespace craft {
 
     int Chunk::get_z() const { return this->z; }
 
+    void Chunk::set_neighbors(Chunk *x, Chunk *z, Chunk *X, Chunk *Z) {
+        this->neighbor_x = x;
+        this->neighbor_z = z;
+        this->neighbor_X = X;
+        this->neighbor_Z = Z;
+    }
+
     float Chunk::light_at_block(int x, int y, int z) {
         if (x >= this->size || z >= this->size || y >= this->height || x < 0 || y < 0 || z < 0)
             return (this->is_air(x, y, z)) ? 1.0f : 0.0f;
@@ -82,12 +89,11 @@ namespace craft {
         };
     }
 
-    void Chunk::load() {
+    void Chunk::load_blocks() {
         // Load blocks
         blocks = std::vector<std::vector<std::vector<Block *> *> *>(height);
         for (int y = 0; y < this->height; y++) {
-            std::vector<std::vector<Block *> *> *layer
-                    = new std::vector<std::vector<Block *> *>(this->size);
+            std::vector<std::vector<Block *> *> *layer = new std::vector<std::vector<Block *> *>(this->size);
             for (int x = 0; x < this->size; x++) {
                 std::vector<Block *> *row = new std::vector<Block *>(this->size);
                 for (int z = 0; z < this->size; z++) {
@@ -102,6 +108,9 @@ namespace craft {
             }
             blocks[y] = layer;
         }
+    }
+
+    void Chunk::load_lighting() {
         // Load lighting
         lights = std::vector<std::vector<std::vector<LightPoint *> *> *>(height + 1);
         for (int y = 0; y <= this->height; y++) {
@@ -148,6 +157,7 @@ namespace craft {
         }
     }
 
+    // Generates the VBO for a Chunk
     void Chunk::generate_vbo() {
 
         std::vector<float> data = std::vector<float>();
@@ -168,8 +178,9 @@ namespace craft {
                         if (touching_air) {
 
                             BlockLightingInfo li = get_block_lighting(x, y, z);
-                            add_blockdata(&data, this->get_block(x, y, z), x, y, z,
-                                          calculate_adjacent_block_info({(uint) x, (uint) y, (uint) z}), li
+                            add_blockdata(&data,
+                               this->get_block(x, y, z), x, y, z,
+                               calculate_adjacent_block_info({(uint) x, (uint) y, (uint) z}), li
                             );
                         }
                     }
@@ -184,6 +195,8 @@ namespace craft {
         gfx::VAORenderer *renderer = new gfx::VAORenderer(vao);
         this->add_component(renderer);
 
+        // Queue deleted blocks for recalculation(testing)
+        /*
         std::vector<LocalPos> edit_blocks = std::vector<LocalPos>();
         for (uint x = 0; x < this->size; x++) {
             for (uint z = 0; z < this->size; z++) {
@@ -191,24 +204,52 @@ namespace craft {
                 edit_blocks.push_back({x, 40, z});
                 edit_blocks.push_back({x, 39, z});
 
+                // Set blocks to air
                 get_block(x, 40, z)->id = 0;
-                // get_block(x, 40, z)->light_level = 16;
+                get_block(x, 40, z)->light_level = 16;
             }
         }
-        update_blocks(&edit_blocks);
+        update_blocks(&edit_blocks);*/
     }
 
+    // Returns whether the block at a given relative coordinate is air
     bool Chunk::is_air(int x, int y, int z) {
-        if (x < 0 || y < 0 || z < 0 || x >= this->size || y >= this->height || z >= this->size)
-            return this->gen_func(
-                    this->x * (int) this->size + x,
-                    y,
-                    this->z * (int) this->size + z
-            ) == 0;
-        Block *b = get_block(x, y, z);
-        return (b == nullptr || b->id == 0);
+
+        // Outside of height range?
+        if (y < 0 || y >= this->height) return true;
+
+        Chunk *target = this;
+        // Check if outside current chunk
+        if (x < 0) {
+            target = neighbor_x;
+        } else if (x >= this->size) {
+            target = neighbor_X;
+        }
+        if (z < 0) {
+            target = neighbor_z;
+        } else if (z >= this->size) {
+            target = neighbor_Z;
+        }
+        // Chunk doesn't exist, return air
+        if (target == nullptr) {
+            return true;
+        }
+
+        // Get the block at whatever position.
+        Block *b;
+        if (target == this) {
+            b = target->get_block(x, y, z);
+            return (b == nullptr || b->id == 0);
+        } else {
+            int dx = target->get_x() - this->get_x();
+            int dz = target->get_z() - this->get_z();
+            int new_x = x - ((int)this->size)*dx;
+            int new_z = z - ((int)this->size)*dz;
+            return target->is_air(new_x, y, new_z);
+        }
     }
 
+    // Returns a pointer to the block at a given relative position
     Block *Chunk::get_block(uint x, uint y, uint z) {
         if (x >= this->size || y >= this->height || z >= this->size)
             return nullptr;
@@ -305,6 +346,8 @@ namespace craft {
             }
         }
     }
+
+    // VBO UTIL
 
     void Chunk::add_point(std::vector<float> *data, glm::vec3 v, glm::vec2 t, float b) {
         data->push_back(v.x);
@@ -455,13 +498,16 @@ namespace craft {
     }
 
     AdjacentBlockInfo Chunk::calculate_adjacent_block_info(LocalPos p) {
+        int x = p.x;
+        int y = p.y;
+        int z = p.z;
         return {
-                this->is_air(p.x + 1, p.y, p.z),
-                this->is_air(p.x - 1, p.y, p.z),
-                this->is_air(p.x, p.y + 1, p.z),
-                this->is_air(p.x, p.y - 1, p.z),
-                this->is_air(p.x, p.y, p.z + 1),
-                this->is_air(p.x, p.y, p.z - 1)
+                this->is_air(x + 1, y, z),
+                this->is_air(x - 1, y, z),
+                this->is_air(x, y + 1, z),
+                this->is_air(x, y - 1, z),
+                this->is_air(x, y, z + 1),
+                this->is_air(x, y, z - 1)
         };
     }
 

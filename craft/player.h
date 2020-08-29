@@ -16,14 +16,29 @@ namespace craft {
 
         void handleInput(GLFWwindow *window);
 
+        void mouseCallback(GLFWwindow *window, double xpos, double ypos);
+
+        gfx::Camera *getCamera();
+
     private:
         gfx::Camera *camera;
         float last_frame;
+
+        float lastX;
+        float lastY;
+        bool firstMouse;
+        float yaw;
+        float pitch;
     };
 }
 
 namespace craft {
-    Player::Player() : camera{new gfx::Camera(120, 16.0 / 9.0)} {}
+    Player::Player() {
+        this->camera = new gfx::Camera(120, 16.0 / 9.0);
+        this->firstMouse = true;
+        this->yaw = 180;
+        this->pitch = 0;
+    }
 
     Player::~Player() {
         delete camera;
@@ -35,7 +50,7 @@ namespace craft {
 
 
         // Translating player
-        float spd = 5.0f * delta_time;
+        float spd = 10.0f * delta_time;
         glm::vec3 cpos = camera->get_transform()->get_position();
         glm::vec3 cfwd = camera->get_direction();
         glm::vec3 cup = camera->get_up();
@@ -48,6 +63,41 @@ namespace craft {
         if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
             cpos += glm::normalize(glm::cross(cfwd, cup)) * spd;
         camera->get_transform()->set_position(cpos);
+
+        glm::vec3 front;
+        front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+        front.y = sin(glm::radians(pitch));
+        front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+        camera->set_direction(glm::normalize(front));
+    }
+
+    void Player::mouseCallback(GLFWwindow *window, double xpos, double ypos) {
+        if (firstMouse) {
+            lastX = xpos;
+            lastY = ypos;
+            firstMouse = false;
+        }
+
+        float xoffset = xpos - lastX;
+        float yoffset = lastY - ypos;
+        lastX = xpos;
+        lastY = ypos;
+
+        float sensitivity = 0.1;
+        xoffset *= sensitivity;
+        yoffset *= sensitivity;
+
+        yaw += xoffset;
+        pitch += yoffset;
+
+        if (pitch > 89.0f)
+            pitch = 89.0f;
+        if (pitch < -89.0f)
+            pitch = -89.0f;
+    }
+
+    gfx::Camera *Player::getCamera() {
+        return camera;
     }
 }
 
